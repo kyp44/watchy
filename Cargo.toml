@@ -1,0 +1,22 @@
+[package]
+edition = "2021"
+name = "watchy"
+version = "0.0.1"
+
+[dependencies]
+esp-idf-hal = {version = "0.41", optional = true, default-features = false}
+
+[features]
+all = ["std", "alloc", "embassy", "nightly"]
+alloc = ["esp-idf-hal/alloc"]
+default = ["std", "alloc"]
+embassy = [
+  "esp-idf-hal/embassy-sync",
+  "esp-idf-hal/critical-section",
+  "esp-idf-hal/edge-executor",
+]
+nightly = ["esp-idf-hal/nightly"]
+std = ["alloc", "esp-idf-hal/std"]
+
+[build-dependencies]
+embuild = "0.31.2"
