@@ -4,19 +4,27 @@ name = "watchy"
 version = "0.0.1"
 
 [dependencies]
+embedded-hal = "1.0.0-alpha.10"
 esp-idf-hal = {version = "0.41", optional = true, default-features = false}
+esp-idf-svc = {version = "0.46", default-features = false}
+esp-idf-sys = {version = "0.33", default-features = false}
+gdeh0154d67 = {version = "0.1", git = "https://gitlab.com/dwhitman44/gdeh0154d67"}
+rounded-div = "0.1"
+thiserror = "1.0"
 
 [features]
 all = ["std", "alloc", "embassy", "nightly"]
-alloc = ["esp-idf-hal/alloc"]
+alloc = ["esp-idf-hal/alloc", "esp-idf-svc/alloc"]
 default = ["std", "alloc"]
 embassy = [
   "esp-idf-hal/embassy-sync",
   "esp-idf-hal/critical-section",
   "esp-idf-hal/edge-executor",
+  "esp-idf-svc/embassy-time-driver",
+  "esp-idf-svc/embassy-time-isr-queue",
 ]
-nightly = ["esp-idf-hal/nightly"]
-std = ["alloc", "esp-idf-hal/std"]
+nightly = ["esp-idf-hal/nightly", "esp-idf-svc/nightly"]
+std = ["alloc", "gdeh0154d67/std", "esp-idf-sys/std", "esp-idf-hal/std", "esp-idf-svc/std"]
 
 [build-dependencies]
 embuild = "0.31.2"
