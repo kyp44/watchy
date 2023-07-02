@@ -5,11 +5,9 @@ Board support crate for the [Watchy](https://watchy.sqfmi.com/) programmable sma
 This is still very much a work in progress.
 
 TODO:
-Display,
 Accelerometer,
 RTC,
-Battery,
-Buttons,
 Vibration motor
 
-Currently only supports v2.0 of the board.
+Currently only supports v2.0 of the board, and only uses the IDF version of the HAL
+and services crates.
