@@ -1,6 +1,6 @@
 //! A function to setup the driver for the GDEH0154D67 e-Ink display.
 
-use crate::hal::{delay, gpio, spi, units::FromValueType};
+use crate::hal::{delay, gpio, peripheral, spi, units::FromValueType};
 use crate::pins;
 use crate::sys::EspError;
 
@@ -31,13 +31,9 @@ pub type DisplayDriver<'d, INIT> = GDEH0154D67<
 ///
 /// NOTE: SPI0 is reserved and SPI1 is restricted, so neither should
 /// be used to drive the display.
-pub fn display_driver<
-    'd,
-    SPI: spi::SpiAnyPins,
-    P: crate::hal::peripheral::Peripheral<P = SPI> + 'd,
->(
+pub fn display_driver<'d, SPI: spi::SpiAnyPins>(
     display_pins: pins::Display,
-    spi: P,
+    spi: impl peripheral::Peripheral<P = SPI> + 'd,
 ) -> Result<DisplayDriver<'d, NotInitialized>, DisplayError> {
     // Setup the SPI driver
     let spi = spi::SpiDeviceDriver::new_single(
