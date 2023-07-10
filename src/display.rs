@@ -1,5 +1,8 @@
 //! A function to setup the driver for the GDEH0154D67 e-Ink display.
 
+// Re-export core display driver crate.
+pub use gdeh0154d67;
+
 use crate::hal::{delay, gpio, peripheral, spi, units::FromValueType};
 use crate::pins;
 use crate::sys::EspError;
