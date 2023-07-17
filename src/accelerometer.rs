@@ -51,16 +51,16 @@ where
         let mut pin_driver_int1 = gpio::PinDriver::input(accelerometer_pins.int_1)?;
         let mut pin_driver_int2 = gpio::PinDriver::input(accelerometer_pins.int_2)?;
 
-        // NOTE: By default the interrupt pins of the IC are set to push/pull, active low
-        pin_driver_int1.set_pull(gpio::Pull::Down)?;
-        pin_driver_int2.set_pull(gpio::Pull::Down)?;
+        // TODO: Again these are not generic and users may not always want this.
+        pin_driver_int1.set_pull(gpio::Pull::Floating)?;
+        pin_driver_int1.set_pull(gpio::Pull::Floating)?;
 
-        // For some reason the default address in the driver is the alternate address
-        // in the data sheet.
-        let mut driver = Bma423::new_with_address(i2c_driver, 0x18);
+        let mut driver = Bma423::new(i2c_driver);
 
+        // Initialize the device
         driver.init(&mut delay::Delay)?;
 
+        // Verify that the device was found
         match driver.get_chip_id()? {
             ChipId::Unknown => Err(AccelerometerError::BadId),
             ChipId::Bma423 => Ok(Self {
@@ -75,12 +75,16 @@ where
         &mut self.driver
     }
 
+    // TODO: If we assume interrupt is rising edge, need to have a method to
+    // set them up that way (or do so in constructor), but what is a user might
+    // want to use as inputs or something, remember this is a generic BSC.
     pub async fn wait_for_int1(&mut self) -> Result<(), gpio::GpioError> {
-        self.pin_driver_int1.wait_for_high().await
+        self.pin_driver_int1.wait_for_rising_edge().await
     }
 
     pub async fn wait_for_int2(&mut self) -> Result<(), gpio::GpioError> {
-        // TODO: Make sure is correct.
-        self.pin_driver_int2.wait_for_falling_edge().await
+        self.pin_driver_int2.wait_for_rising_edge().await
     }
 }
+
+// TODO: should we implement the Accelerometer trait for this?
