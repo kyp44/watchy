@@ -6,7 +6,6 @@ version = "0.0.1"
 [dependencies]
 bma423 = {version = "0.0", path = "../bma423-rs"}
 embedded-hal = "1.0.0-alpha.10"
-embedded-hal-0-2 = {package = "embedded-hal", version = "0.2"}
 enumset = "1.1"
 esp-idf-hal = {version = "0.41", default-features = false}
 esp-idf-svc = {version = "0.46", default-features = false}

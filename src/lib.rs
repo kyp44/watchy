@@ -27,12 +27,10 @@ use hal::{i2c, interrupt, peripheral, units::FromValueType};
 /// may occur.
 pub type EspResult<T> = Result<T, sys::EspError>;
 
-/// Sets up the I2C driver for use with the accelerometer and RTC.
+/// Sets up the I2C driver for use with the accelerometer or RTC.
 ///
-/// TODO: Use `shared_bus` if needed, or maybe `embedded-hal-bus`.
-/// TODO: Should we have the accel and/or RTC drivers setup the I2C,
-/// perhaps returning a shared version or maybe with a separate constructor?
-/// Would probably be more ergonomic and code could be shared.
+/// The `embedded-hal-bus` crate can be used to share the I2C driver
+/// between both devices.
 pub fn i2c_driver<'d, I2C: i2c::I2c>(
     i2c_pins: pins::I2CBus,
     i2c_periph: impl peripheral::Peripheral<P = I2C> + 'd,
