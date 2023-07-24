@@ -16,7 +16,7 @@ rounded-div = "0.1"
 thiserror = "1.0"
 
 [features]
-all = ["std", "alloc", "embassy", "nightly", "native"]
+all = ["std", "alloc", "embassy", "nightly", "native", "pio"]
 alloc = ["esp-idf-hal/alloc", "esp-idf-svc/alloc"]
 default = ["std", "alloc"]
 embassy = [
@@ -28,4 +28,5 @@ embassy = [
 ]
 native = ["esp-idf-sys/native"]
 nightly = ["esp-idf-hal/nightly", "esp-idf-svc/nightly"]
+pio = ["esp-idf-sys/pio"]
 std = ["alloc", "gdeh0154d67/std", "esp-idf-sys/std", "esp-idf-sys/binstart", "esp-idf-hal/std", "esp-idf-svc/std"]
