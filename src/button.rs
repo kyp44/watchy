@@ -40,4 +40,25 @@ impl<'d, P: ButtonPin> ButtonDriver<'d, P> {
     pub async fn wait_for_press(&mut self) -> Result<(), gpio::GpioError> {
         self.pin_driver.wait_for_rising_edge().await
     }
+
+    /// Asynchronously waits for the button to be in the pressed state.
+    ///
+    /// If the button is already pressed, this will instantly return.
+    pub async fn wait_for_pressed(&mut self) -> Result<(), gpio::GpioError> {
+        self.pin_driver.wait_for_high().await
+    }
+
+    /// Asynchronously waits for the button to be released.
+    ///
+    /// If the button is already released, it waits for the next release.
+    pub async fn wait_for_release(&mut self) -> Result<(), gpio::GpioError> {
+        self.pin_driver.wait_for_falling_edge().await
+    }
+
+    /// Asynchronously waits for the button to be in the released state.
+    ///
+    /// If the button is already released, this will instantly return.
+    pub async fn wait_for_released(&mut self) -> Result<(), gpio::GpioError> {
+        self.pin_driver.wait_for_low().await
+    }
 }
