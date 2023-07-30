@@ -15,11 +15,11 @@ impl BatteryStatus {
 
     /// Returns the charge percentage of the battery.
     pub fn percentage(&self) -> u8 {
-        // NOTE: The percentage calculation is linear from 3600 mV to 4200 mV
+        // NOTE: The percentage calculation is linear from 3400 mV to 4200 mV
         self.0
-            .saturating_sub(3600)
+            .saturating_sub(3400)
             .saturating_mul(100)
-            .rounded_div(600)
+            .rounded_div(800)
             .min(100)
             .try_into()
             .unwrap()

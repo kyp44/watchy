@@ -20,8 +20,8 @@ pub mod button;
 pub mod display;
 pub mod pins;
 
-use enumset::{enum_set, EnumSet};
-use hal::{i2c, interrupt, peripheral, units::FromValueType};
+use enumset::EnumSet;
+use hal::{i2c, peripheral, units::FromValueType};
 
 /// Result type alias for functions for which an [`EspError`](sys::EspError)
 /// may occur.
