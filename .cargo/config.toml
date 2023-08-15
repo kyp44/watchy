@@ -1,0 +1,12 @@
+[build]
+target = "xtensa-esp32-espidf"
+
+[target.xtensa-esp32-espidf]
+linker = "ldproxy"
+
+[unstable]
+build-std = ["std", "panic_abort"]
+
+[env]
+# Note: these variables are not used when using pio builder (`cargo build --features pio`)
+ESP_IDF_VERSION = "release/v4.4"

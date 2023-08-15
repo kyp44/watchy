@@ -1,4 +1,4 @@
-//! A function to setup the driver for the GDEH0154D67 e-Ink display.
+//! Items to setup the driver for the GDEH0154D67 e-Ink display.
 
 // Re-export core display driver crate.
 pub use gdeh0154d67;
@@ -11,11 +11,12 @@ use gdeh0154d67::{NotInitialized, GDEH0154D67};
 use thiserror::Error;
 
 /// Error for display setup problems.
-/// TODO: This will need adjusted if in `no_std`.
 #[derive(Error, Debug)]
 pub enum DisplayError {
+    /// A SPI bus error.
     #[error("Error setting up the SPI driver: {0}")]
     Spi(#[from] EspError),
+    /// A display driver error.
     #[error("Display driver error: {0}")]
     Driver(#[from] gdeh0154d67::error::Error),
 }

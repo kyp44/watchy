@@ -1,4 +1,4 @@
-//! TODO
+//! Items to setup the driver for the BMA423 accelerometer chip.
 
 // Re-export core driver crate
 pub use bma423;
@@ -14,20 +14,26 @@ use thiserror::Error;
 use bma423::{Bma423, ChipId, Config, Error, FullPower};
 
 /// Error for display setup problems.
-/// TODO: This will need adjusted if in `no_std`.
 #[derive(Error, Debug)]
 pub enum AccelerometerError<E: std::fmt::Debug> {
+    /// The chip returned an invalid chip ID
     #[error("Bad chip ID")]
     BadId,
+    /// An ESP peripheral error
     #[error("Esp error: {0}")]
     Esp(#[from] EspError),
+    /// An error with the accelerometer driver
     #[error("Accelerometer driver error: {0:?}")]
     Driver(#[from] Error<E>),
 }
 
+/// Breakout of the accelerometer driver and its interrupt pin drivers.
 pub struct AccelerometerDriver<'d, I2C> {
+    /// The accelerometer driver
     pub driver: Bma423<I2C, FullPower>,
+    /// Pin driver for the interrupt 1 line
     pub pin_driver_int1: gpio::PinDriver<'d, gpio::Gpio14, gpio::Input>,
+    /// Pin driver for the interrupt 2 line
     pub pin_driver_int2: gpio::PinDriver<'d, gpio::Gpio12, gpio::Input>,
 }
 
