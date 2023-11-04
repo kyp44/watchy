@@ -10,7 +10,7 @@
 //! let pin_sets = pins::Sets::new(peripherals.pins);
 //! ```
 
-use esp_idf_hal::gpio;
+use crate::hal::gpio;
 
 /// Pins used for the e-Ink display.
 ///
@@ -122,6 +122,8 @@ pub struct Unused {
 }
 
 /// Sets of pins organized by hardware devices featured on the board.
+///
+/// Transform the generic HAL pins into these Watchy-specific pins using [`Sets::new`].
 pub struct Sets {
     /// Pins used for the e-Ink display
     pub display: Display,

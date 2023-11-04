@@ -19,20 +19,18 @@
 //!
 //! To use this crate, follow the instructions in [The Rust on ESP Book](https://esp-rs.github.io/book/) to setup the build environment and create a binary crate project.
 //! Note that the standard ESP-IDF crates (viz. `esp-idf-hal`, `esp-idf-sys`, and `esp-idf-svc`) are re-exported from this crate with their features exposed.
-//! As such, these do not need to be included as explicit dependencies in any binary crates.
-//!
-//! Unfortunately, documentation cannot be provided yet, as the standalone crate does not currently compile.
-//! To view documentation for this crate, it is recommended to use this as dependency in a standard ESP binary crate project, and then build and view the documentation locally for that project.
-//! If anyone is able to get the standalone crate to compile, please let me know so that standalone documentation can be produced and hosted.
+//! A binary crate will likely still need to include `esp-idf-sys` as a direct dependency, and will need to enable the `binstart` feature of this crate or `esp-idf-sys`.
 //!
 //! Contributions and API suggestions are welcome.
 
 #![warn(missing_docs)]
 #![warn(clippy::missing_docs_in_private_items)]
 
-pub use esp_idf_hal as hal;
 pub use esp_idf_svc as svc;
-pub use esp_idf_sys as sys;
+/// Re-export of the [`esp-idf-hal`](https://esp-rs.github.io/esp-idf-hal/esp_idf_hal/index.html) crate.
+pub use esp_idf_svc::hal;
+/// Re-export of the [`esp-idf-sys`](https://esp-rs.github.io/esp-idf-sys/esp_idf_sys/index.html) crate.
+pub use esp_idf_svc::sys;
 
 pub mod accelerometer;
 pub mod battery;
@@ -47,7 +45,7 @@ use hal::{i2c, peripheral, units::FromValueType};
 /// may occur.
 pub type EspResult<T> = Result<T, sys::EspError>;
 
-/// Sets up the I2C driver for use with the accelerometer or RTC.
+/// Sets up the I2C driver for use with the accelerometer and/or RTC.
 ///
 /// The `embedded-hal-bus` crate can be used to share the I2C driver
 /// between both devices.

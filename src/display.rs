@@ -58,6 +58,9 @@ pub fn display_driver<'d, SPI: spi::SpiAnyPins>(
             bit_order: spi::config::BitOrder::MsbFirst,
             cs_active_high: false,
             input_delay_ns: 50,
+            polling: false,
+            allow_pre_post_delays: true,
+            queue_size: 20,
         },
     )?;
 
@@ -67,6 +70,6 @@ pub fn display_driver<'d, SPI: spi::SpiAnyPins>(
         gpio::PinDriver::output(display_pins.disp_dc)?,
         gpio::PinDriver::output(display_pins.disp_reset)?,
         gpio::PinDriver::input(display_pins.disp_busy)?,
-        delay::Delay,
+        delay::Delay::new_default(),
     )?)
 }

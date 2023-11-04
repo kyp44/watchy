@@ -14,29 +14,28 @@ version = "0.1.0"
 
 [dependencies]
 # Some improvements made to this crate have not yet been merged into the main project
-bma423 = {version = "0.0", git = "https://github.com/kyp44/bma423-rs"}
-embedded-hal = "1.0.0-alpha.10"
+#bma423 = {version = "0.0", git = "https://github.com/kyp44/bma423-rs"}
+bma423 = {version = "0.0", path = "../bma423-rs"}
+embedded-hal = "1.0.0-rc.1"
 enumset = "1.1"
-esp-idf-hal = {version = "0.41", default-features = false}
-esp-idf-svc = {version = "0.46", default-features = false}
-esp-idf-sys = {version = "0.33", default-features = false}
+esp-idf-svc = {version = "0.47", default-features = false}
 # Some improvements made to this crate have not yet been merged into the main project
-gdeh0154d67 = {version = "0.1", git = "https://gitlab.com/dwhitman44/gdeh0154d67"}
+#gdeh0154d67 = {version = "0.1", git = "https://gitlab.com/dwhitman44/gdeh0154d67"}
+gdeh0154d67 = {version = "0.1", path = "../gdeh0154d67"}
 rounded-div = "0.1"
 thiserror = "1.0"
 
 [features]
-all = ["std", "alloc", "embassy", "nightly", "native"]
-alloc = ["esp-idf-hal/alloc", "esp-idf-svc/alloc"]
+all = ["std", "alloc", "binstart", "embassy", "nightly", "native"]
+alloc = ["esp-idf-svc/alloc"]
+binstart = ["esp-idf-svc/binstart"]
 default = ["alloc", "native", "std"]
 embassy = [
-  "esp-idf-hal/embassy-sync",
-  "esp-idf-hal/critical-section",
-  "esp-idf-hal/edge-executor",
+  "esp-idf-svc/embassy-sync",
+  "esp-idf-svc/critical-section",
   "esp-idf-svc/embassy-time-driver",
   "esp-idf-svc/embassy-time-isr-queue",
 ]
-native = ["esp-idf-sys/native"]
-nightly = ["esp-idf-hal/nightly", "esp-idf-svc/nightly"]
-pio = ["esp-idf-sys/pio"]
-std = ["alloc", "gdeh0154d67/std", "esp-idf-sys/std", "esp-idf-hal/std", "esp-idf-svc/std"]
+native = ["esp-idf-svc/native"]
+nightly = ["esp-idf-svc/nightly"]
+std = ["alloc", "gdeh0154d67/std", "esp-idf-svc/std"]

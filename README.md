@@ -23,10 +23,6 @@ To use this crate, follow the instructions in [The Rust on ESP Book](https://esp
 Note that the standard ESP-IDF crates (viz. `esp-idf-hal`, `esp-idf-sys`, and `esp-idf-svc`) are re-exported from this crate with their features exposed.
 As such, these do not need to be included as explicit dependencies in any binary crates.
 
-Unfortunately, documentation cannot be provided yet, as the standalone crate does not currently compile.
-To view documentation for this crate, it is recommended to use this as dependency in a standard ESP binary crate project, and then build and view the documentation locally for that project.
-If anyone is able to get the standalone crate to compile, please let me know so that standalone documentation can be produced and hosted.
-
 Contributions and API suggestions are welcome.
 
 License: MIT

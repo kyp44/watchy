@@ -1,6 +1,6 @@
 //! Battery status using the ADC.
 
-use crate::hal::{adc, gpio};
+use crate::hal::{adc, adc::ADC1, gpio};
 use crate::{pins, EspResult};
 
 use rounded_div::RoundedDiv;
@@ -27,13 +27,15 @@ impl BatteryStatus {
 }
 
 /// Driver to retrieve the battery status.
-pub struct BatteryStatusDriver<'d, ADC: adc::Adc> {
-    driver: adc::AdcDriver<'d, ADC>,
-    channel_driver: adc::AdcChannelDriver<'d, gpio::Gpio34, adc::Atten11dB<adc::ADC1>>,
+pub struct BatteryStatusDriver<'d> {
+    /// The ADC driver struct.
+    driver: adc::AdcDriver<'d, ADC1>,
+    /// The ADC channel driver struct.
+    channel_driver: adc::AdcChannelDriver<'d, { adc::attenuation::DB_11 }, gpio::Gpio34>,
 }
-impl<'d, ADC: adc::Adc> BatteryStatusDriver<'d, ADC> {
+impl<'d> BatteryStatusDriver<'d> {
     /// Setup a new battery status driver.
-    pub fn new<P: crate::hal::peripheral::Peripheral<P = ADC> + 'd>(
+    pub fn new<P: crate::hal::peripheral::Peripheral<P = ADC1> + 'd>(
         battery_pins: pins::Battery,
         adc: P,
     ) -> EspResult<Self> {
@@ -45,8 +47,7 @@ impl<'d, ADC: adc::Adc> BatteryStatusDriver<'d, ADC> {
             },
         )?;
 
-        let channel_driver: adc::AdcChannelDriver<_, adc::Atten11dB<adc::ADC1>> =
-            adc::AdcChannelDriver::new(battery_pins.adc)?;
+        let channel_driver = adc::AdcChannelDriver::new(battery_pins.adc)?;
 
         Ok(Self {
             driver,
