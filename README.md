@@ -25,11 +25,13 @@ A binary crate will still need to include `esp-idf-sys` as a direct dependency.
 
 In order to release this crate on [crates.io](https://crates.io/), all dependencies must also be released there.
 However, there are currently a couple of issues that require dependencies to be patched to `git` repositories:
-1. The `gdeh0154d67` display driver crate relies on `bitvec`, which current has an [unreleased version issue](https://github.com/ferrilab/ferrilab/issues/5), with the currently released version not compiling.
-   It seems that the author currently has some big things going on in his life that is preventing the release.
+1. The `gdeh0154d67` display driver crate relies on `bitvec`, which currently has an [unreleased version issue](https://github.com/ferrilab/ferrilab/issues/5), with the latest released version not compiling.
+   It seems that the author currently has some big things going on in his life that are consuming his attention at the moment.
    As a result, the `bitvec` dependency must be patched to the [latest version on GitHub](https://github.com/ferrilab/ferrilab).
 2. I have made some updates to the `gdeh0154d67` crate that have not yet found their way onto `crates.io`, so this must be patched to [my GitLab fork](https://gitlab.com/dwhitman44/gdeh0154d67).
    I am holding off on a pull request to make this happen until issue 1 above is resolved.
+
+I will try to monitor these issues so that this can be released on `crates.io` once they are resolved.
 
 Contributions and API suggestions are welcome.
 
