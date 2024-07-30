@@ -19,7 +19,15 @@
 //!
 //! To use this crate, follow the instructions in [The Rust on ESP Book](https://esp-rs.github.io/book/) to setup the build environment and create a binary crate project.
 //! Note that the standard ESP-IDF crates (viz. `esp-idf-hal`, `esp-idf-sys`, and `esp-idf-svc`) are re-exported from this crate with their features exposed.
-//! A binary crate will likely still need to include `esp-idf-sys` as a direct dependency, and will need to enable the `binstart` feature of this crate or `esp-idf-sys`.
+//! A binary crate will still need to include `esp-idf-sys` as a direct dependency.
+//!
+//! In order to release this crate on [crates.io](https://crates.io/), all dependencies must also be released there.
+//! However, there are currently a couple of issues that require dependencies to be patched to `git` repositories:
+//! 1. The `gdeh0154d67` display driver crate relies on `bitvec`, which current has an [unreleased version issue](https://github.com/ferrilab/ferrilab/issues/5), with the currently released version not compiling.
+//!    It seems that the author currently has some big things going on in his life that is preventing the release.
+//!    As a result, the `bitvec` dependency must be patched to the [latest version on GitHub](https://github.com/ferrilab/ferrilab).
+//! 2. I have made some updates to the `gdeh0154d67` crate that have not yet found their way onto `crates.io`, so this must be patched to [my GitLab fork](https://gitlab.com/dwhitman44/gdeh0154d67).
+//!    I am holding off on a pull request to make this happen until issue 1 above is resolved.
 //!
 //! Contributions and API suggestions are welcome.
 
@@ -49,6 +57,13 @@ pub type EspResult<T> = Result<T, sys::EspError>;
 ///
 /// The `embedded-hal-bus` crate can be used to share the I2C driver
 /// between both devices.
+///
+/// # Example
+/// ```no_run
+/// let peripherals = watchy::hal::peripherals::Peripherals::take().unwrap();
+/// let pin_sets = watchy::pins::Sets::new(peripherals.pins);
+/// let i2c_driver = watchy::i2c_driver(pin_sets.i2c, peripherals.i2c0).unwrap();
+/// ```
 pub fn i2c_driver<'d, I2C: i2c::I2c>(
     i2c_pins: pins::I2CBus,
     i2c_periph: impl peripheral::Peripheral<P = I2C> + 'd,
@@ -64,7 +79,7 @@ pub fn i2c_driver<'d, I2C: i2c::I2c>(
             sda_pullup_enabled: false,
             scl_pullup_enabled: false,
             timeout: None,
-            intr_flags: EnumSet::EMPTY,
+            intr_flags: EnumSet::empty(),
         },
     )
 }

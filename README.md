@@ -21,7 +21,15 @@ If there is interest, older board versions and the alternative bare-metal ESP cr
 
 To use this crate, follow the instructions in [The Rust on ESP Book](https://esp-rs.github.io/book/) to setup the build environment and create a binary crate project.
 Note that the standard ESP-IDF crates (viz. `esp-idf-hal`, `esp-idf-sys`, and `esp-idf-svc`) are re-exported from this crate with their features exposed.
-As such, these do not need to be included as explicit dependencies in any binary crates.
+A binary crate will still need to include `esp-idf-sys` as a direct dependency.
+
+In order to release this crate on [crates.io](https://crates.io/), all dependencies must also be released there.
+However, there are currently a couple of issues that require dependencies to be patched to `git` repositories:
+1. The `gdeh0154d67` display driver crate relies on `bitvec`, which current has an [unreleased version issue](https://github.com/ferrilab/ferrilab/issues/5), with the currently released version not compiling.
+   It seems that the author currently has some big things going on in his life that is preventing the release.
+   As a result, the `bitvec` dependency must be patched to the [latest version on GitHub](https://github.com/ferrilab/ferrilab).
+2. I have made some updates to the `gdeh0154d67` crate that have not yet found their way onto `crates.io`, so this must be patched to [my GitLab fork](https://gitlab.com/dwhitman44/gdeh0154d67).
+   I am holding off on a pull request to make this happen until issue 1 above is resolved.
 
 Contributions and API suggestions are welcome.
 

@@ -28,6 +28,8 @@ pub enum AccelerometerError<E: std::fmt::Debug> {
 }
 
 /// Breakout of the accelerometer driver and its interrupt pin drivers.
+///
+/// The primary interface to the BMA423 accelerometer chip is via an [I2C bus](https://en.wikipedia.org/wiki/I%C2%B2C).
 pub struct AccelerometerDriver<'d, I2C> {
     /// The accelerometer driver.
     pub driver: Bma423<I2C, FullPower>,
@@ -41,6 +43,22 @@ impl<I2C: i2c::I2c> AccelerometerDriver<'_, I2C> {
     ///
     /// It is recommended to setup the `i2c_driver` using the [`i2c_driver`](crate::i2c_driver) function
     /// as this will configure the I2C with the correct settings for the chip.
+    ///
+    /// # Example
+    /// ```no_run
+    /// use watchy::accelerometer::bma423;
+    /// let peripherals = watchy::hal::peripherals::Peripherals::take().unwrap();
+    /// let pin_sets = watchy::pins::Sets::new(peripherals.pins);
+    /// let accelerometer_driver = watchy::accelerometer::AccelerometerDriver::new(
+    ///     pin_sets.accelerometer,
+    ///     watchy::i2c_driver(pin_sets.i2c, peripherals.i2c0).unwrap(),
+    ///     bma423::Config {
+    ///         sample_rate: bma423::AccelConfigOdr::Odr200,
+    ///         ..Default::default()
+    ///     },
+    /// )
+    /// .unwrap();
+    /// ```
     pub fn new(
         accelerometer_pins: pins::Accelerometer,
         i2c_driver: I2C,

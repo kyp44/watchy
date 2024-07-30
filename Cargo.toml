@@ -12,30 +12,29 @@ readme = "README.md"
 repository = "https://github.com/kyp44/watchy"
 version = "0.1.0"
 
+[patch.crates-io]
+# This is currently needed due to this: https://github.com/ferrilab/ferrilab/issues/5
+bitvec = {git = "https://github.com/ferrilab/ferrilab.git"}
+# This is needed due to unreleased changes and the `bitvec` issue.
+gdeh0154d67 = {git = "https://gitlab.com/dwhitman44/gdeh0154d67.git"}
+
 [dependencies]
-# Some improvements made to this crate have not yet been merged into the main project
-#bma423 = {version = "0.0", git = "https://github.com/kyp44/bma423-rs"}
-bma423 = {version = "0.0", path = "../bma423-rs"}
-embedded-hal = "1.0.0-rc.1"
+bma423 = "0.0"
+embedded-hal = "1"
 enumset = "1.1"
-esp-idf-svc = {version = "0.47", default-features = false}
-# Some improvements made to this crate have not yet been merged into the main project
-#gdeh0154d67 = {version = "0.1", git = "https://gitlab.com/dwhitman44/gdeh0154d67"}
-gdeh0154d67 = {version = "0.1", path = "../gdeh0154d67"}
+esp-idf-svc = {version = "0.49", default-features = false}
+gdeh0154d67 = "0.2"
 rounded-div = "0.1"
 thiserror = "1.0"
 
 [features]
-all = ["std", "alloc", "binstart", "embassy", "nightly", "native"]
+all = ["std", "alloc", "embassy", "nightly"]
 alloc = ["esp-idf-svc/alloc"]
-binstart = ["esp-idf-svc/binstart"]
-default = ["alloc", "native", "std"]
+default = ["alloc", "std"]
 embassy = [
   "esp-idf-svc/embassy-sync",
   "esp-idf-svc/critical-section",
   "esp-idf-svc/embassy-time-driver",
-  "esp-idf-svc/embassy-time-isr-queue",
 ]
-native = ["esp-idf-svc/native"]
 nightly = ["esp-idf-svc/nightly"]
 std = ["alloc", "gdeh0154d67/std", "esp-idf-svc/std"]

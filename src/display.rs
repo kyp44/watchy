@@ -33,8 +33,18 @@ pub type DisplayDriver<'d, INIT> = GDEH0154D67<
 
 /// Sets up the display driver.
 ///
+/// The GDEH0154D67 e-ink display is connected over a [SPI bus](https://en.wikipedia.org/wiki/Serial_Peripheral_Interface).
+///
 /// NOTE: SPI0 is reserved and SPI1 is restricted, so neither should
 /// be used to drive the display.
+///
+/// # Example
+/// ```no_run
+/// let peripherals = watchy::hal::peripherals::Peripherals::take().unwrap();
+/// let pin_sets = watchy::pins::Sets::new(peripherals.pins);
+/// let display_driver =
+///     watchy::display::display_driver(pin_sets.display, peripherals.spi2).unwrap();
+/// ```
 pub fn display_driver<'d, SPI: spi::SpiAnyPins>(
     display_pins: pins::Display,
     spi: impl peripheral::Peripheral<P = SPI> + 'd,
@@ -57,6 +67,8 @@ pub fn display_driver<'d, SPI: spi::SpiAnyPins>(
             duplex: spi::config::Duplex::Half,
             bit_order: spi::config::BitOrder::MsbFirst,
             cs_active_high: false,
+            cs_pre_delay_us: None,
+            cs_post_delay_us: None,
             input_delay_ns: 50,
             polling: false,
             allow_pre_post_delays: true,

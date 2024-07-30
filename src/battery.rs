@@ -1,6 +1,9 @@
 //! Battery status using the ADC.
 
-use crate::hal::{adc, adc::ADC1, gpio};
+use crate::hal::{
+    adc::{attenuation, oneshot, ADC1},
+    gpio,
+};
 use crate::{pins, EspResult};
 
 use rounded_div::RoundedDiv;
@@ -27,38 +30,45 @@ impl BatteryStatus {
 }
 
 /// Driver to retrieve the battery status.
+///
+/// The battery voltage sampled using an
+/// [ADC](https://en.wikipedia.org/wiki/Analog-to-digital_converter)
+/// peripheral on the ESP32.
 pub struct BatteryStatusDriver<'d> {
-    /// The ADC driver struct.
-    driver: adc::AdcDriver<'d, ADC1>,
-    /// The ADC channel driver struct.
-    channel_driver: adc::AdcChannelDriver<'d, { adc::attenuation::DB_11 }, gpio::Gpio34>,
+    /// The ADC channel driver struct, which owns the [`AdcDriver`].
+    channel_driver: oneshot::AdcChannelDriver<'d, gpio::Gpio34, oneshot::AdcDriver<'d, ADC1>>,
 }
 impl<'d> BatteryStatusDriver<'d> {
     /// Setup a new battery status driver.
+    ///
+    /// # Example
+    /// ```no_run
+    /// let peripherals = watchy::hal::peripherals::Peripherals::take().unwrap();
+    /// let pin_sets = watchy::pins::Sets::new(peripherals.pins);
+    /// let mut battery_staus_driver =
+    ///     watchy::battery::BatteryStatusDriver::new(pin_sets.battery, peripherals.adc1).unwrap();
+    /// ```
     pub fn new<P: crate::hal::peripheral::Peripheral<P = ADC1> + 'd>(
         battery_pins: pins::Battery,
         adc: P,
     ) -> EspResult<Self> {
-        let driver = adc::AdcDriver::new(
-            adc,
-            &adc::config::Config {
-                resolution: adc::config::Resolution::Resolution12Bit,
+        let driver = oneshot::AdcDriver::new(adc)?;
+
+        let channel_driver = oneshot::AdcChannelDriver::new(
+            driver,
+            battery_pins.adc,
+            &oneshot::config::AdcChannelConfig {
+                attenuation: attenuation::DB_11,
+                resolution: oneshot::config::Resolution::Resolution12Bit,
                 calibration: true,
             },
         )?;
 
-        let channel_driver = adc::AdcChannelDriver::new(battery_pins.adc)?;
-
-        Ok(Self {
-            driver,
-            channel_driver,
-        })
+        Ok(Self { channel_driver })
     }
 
     /// Retrieve the battery status by sampling the ADC.
     pub fn status(&mut self) -> EspResult<BatteryStatus> {
-        Ok(BatteryStatus(
-            u32::from(self.driver.read(&mut self.channel_driver)?) * 2,
-        ))
+        Ok(BatteryStatus(u32::from(self.channel_driver.read()? * 2)))
     }
 }

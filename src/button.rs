@@ -16,6 +16,13 @@ pub struct ButtonDriver<'d, P: ButtonPin> {
 }
 impl<'d, P: ButtonPin> ButtonDriver<'d, P> {
     /// Creates a new button driver for a particular button.
+    ///
+    /// # Example
+    /// ```no_run
+    /// let peripherals = watchy::hal::peripherals::Peripherals::take().unwrap();
+    /// let pin_sets = watchy::pins::Sets::new(peripherals.pins);
+    /// let button_driver = watchy::button::ButtonDriver::new(pin_sets.buttons.btn_1).unwrap();
+    /// ```
     pub fn new(pin: P) -> EspResult<Self> {
         // NOTE: Pins should default to floating pull-up, since the Watchy provides external
         // pulldown resistors. This cannot even be set for GPIO 35.
