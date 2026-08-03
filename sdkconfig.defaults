@@ -1,0 +1,2 @@
+# This is so the SPI driver in `esp-idf-hal` will have async support
+CONFIG_SPI_MASTER_ISR_IN_IRAM=n

@@ -1,9 +1,6 @@
 //! Battery status using the ADC.
 
-use crate::hal::{
-    adc::{attenuation, oneshot, ADC1},
-    gpio,
-};
+use crate::hal::adc::{attenuation, oneshot, ADC1, ADCCH6, ADCU1};
 use crate::{pins, EspResult};
 
 use rounded_div::RoundedDiv;
@@ -36,7 +33,7 @@ impl BatteryStatus {
 /// peripheral on the ESP32.
 pub struct BatteryStatusDriver<'d> {
     /// The ADC channel driver struct, which owns the [`AdcDriver`].
-    channel_driver: oneshot::AdcChannelDriver<'d, gpio::Gpio34, oneshot::AdcDriver<'d, ADC1>>,
+    channel_driver: oneshot::AdcChannelDriver<'d, ADCCH6<ADCU1>, oneshot::AdcDriver<'d, ADCU1>>,
 }
 impl<'d> BatteryStatusDriver<'d> {
     /// Setup a new battery status driver.
@@ -48,19 +45,16 @@ impl<'d> BatteryStatusDriver<'d> {
     /// let mut battery_staus_driver =
     ///     watchy::battery::BatteryStatusDriver::new(pin_sets.battery, peripherals.adc1).unwrap();
     /// ```
-    pub fn new<P: crate::hal::peripheral::Peripheral<P = ADC1> + 'd>(
-        battery_pins: pins::Battery,
-        adc: P,
-    ) -> EspResult<Self> {
+    pub fn new(battery_pins: pins::Battery, adc: ADC1<'d>) -> EspResult<Self> {
         let driver = oneshot::AdcDriver::new(adc)?;
 
         let channel_driver = oneshot::AdcChannelDriver::new(
             driver,
             battery_pins.adc,
             &oneshot::config::AdcChannelConfig {
-                attenuation: attenuation::DB_11,
+                attenuation: attenuation::DB_12,
                 resolution: oneshot::config::Resolution::Resolution12Bit,
-                calibration: true,
+                calibration: oneshot::config::Calibration::Line,
             },
         )?;
 

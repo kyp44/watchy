@@ -1,12 +1,18 @@
-//! Items to setup the driver for the GDEH0154D67 e-Ink display.
+//! Items to control the GDEH0154D67 e-Ink display.
+//!
+//! TODO: Add ability to invert the display and change at runtime.
 
 // Re-export core display driver crate.
 pub use gdeh0154d67;
 
-use crate::hal::{delay, gpio, peripheral, spi, units::FromValueType};
+use crate::hal::{gpio, spi, units::FromValueType};
 use crate::pins;
 use crate::sys::EspError;
 
+#[cfg(not(feature = "async-display"))]
+use embedded_hal::delay;
+#[cfg(feature = "async-display")]
+use embedded_hal_async::delay;
 use gdeh0154d67::{NotInitialized, GDEH0154D67};
 use thiserror::Error;
 
@@ -21,13 +27,14 @@ pub enum DisplayError {
     Driver(#[from] gdeh0154d67::error::Error),
 }
 
-/// The concrete type for the display driver, either uninitialized or initialized.
-pub type DisplayDriver<'d, INIT> = GDEH0154D67<
+/// The concrete type for the display driver, either uninitialized or
+/// initialized.
+pub type DisplayDriver<'d, DLY, INIT> = GDEH0154D67<
     spi::SpiDeviceDriver<'d, spi::SpiDriver<'d>>,
-    gpio::PinDriver<'d, gpio::Gpio10, gpio::Output>,
-    gpio::PinDriver<'d, gpio::Gpio9, gpio::Output>,
-    gpio::PinDriver<'d, gpio::Gpio19, gpio::Input>,
-    delay::Delay,
+    gpio::PinDriver<'d, gpio::Output>,
+    gpio::PinDriver<'d, gpio::Output>,
+    gpio::PinDriver<'d, gpio::Input>,
+    DLY,
     INIT,
 >;
 
@@ -45,11 +52,14 @@ pub type DisplayDriver<'d, INIT> = GDEH0154D67<
 /// let display_driver =
 ///     watchy::display::display_driver(pin_sets.display, peripherals.spi2).unwrap();
 /// ```
-pub fn display_driver<'d, SPI: spi::SpiAnyPins>(
+pub fn display_driver<'d, SPI: spi::SpiAnyPins + 'd, DLY: delay::DelayNs>(
     display_pins: pins::Display,
-    spi: impl peripheral::Peripheral<P = SPI> + 'd,
-) -> Result<DisplayDriver<'d, NotInitialized>, DisplayError> {
-    // Setup the SPI driver
+    spi: SPI,
+    delay: DLY,
+) -> Result<DisplayDriver<'d, DLY, NotInitialized>, DisplayError>
+where
+    DLY: delay::DelayNs,
+{
     let spi = spi::SpiDeviceDriver::new_single(
         spi,
         display_pins.spi_sclk,
@@ -81,7 +91,8 @@ pub fn display_driver<'d, SPI: spi::SpiAnyPins>(
         spi,
         gpio::PinDriver::output(display_pins.disp_dc)?,
         gpio::PinDriver::output(display_pins.disp_reset)?,
-        gpio::PinDriver::input(display_pins.disp_busy)?,
-        delay::Delay::new_default(),
+        // The busy pin is driven to the output voltage
+        gpio::PinDriver::input(display_pins.disp_busy, gpio::Pull::Floating)?,
+        delay,
     )?)
 }

@@ -1,5 +1,12 @@
 # watchy
 
+TODO: Update
+TODO: Note about calling the `initialize` function.
+TODO: Log level controlled via `RUST_LOG` environment variable maybe put in `initialize` doc:
+```
+RUST_LOG = "debug"
+```
+
 Board support crate for the [Watchy](https://watchy.sqfmi.com/) programmable smartwatch.
 
 This is still a work in progress.

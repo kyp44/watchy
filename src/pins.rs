@@ -17,17 +17,17 @@ use crate::hal::gpio;
 /// Most conveniently created as part of the pin set using [`Sets::new`].
 pub struct Display {
     /// The display SPI serial clock pin.
-    pub spi_sclk: gpio::Gpio18,
+    pub spi_sclk: gpio::Gpio18<'static>,
     /// The display SPI serial data out pin.
-    pub spi_sdo: gpio::Gpio23,
+    pub spi_sdo: gpio::Gpio23<'static>,
     /// The display SPI chip select pin.
-    pub spi_cs: gpio::Gpio5,
+    pub spi_cs: gpio::Gpio5<'static>,
     /// The display data/command pin.
-    pub disp_dc: gpio::Gpio10,
+    pub disp_dc: gpio::Gpio10<'static>,
     /// The display reset pin.
-    pub disp_reset: gpio::Gpio9,
+    pub disp_reset: gpio::Gpio9<'static>,
     /// The display busy pin.
-    pub disp_busy: gpio::Gpio19,
+    pub disp_busy: gpio::Gpio19<'static>,
 }
 
 /// Pins to monitor the battery voltage.
@@ -35,7 +35,7 @@ pub struct Display {
 /// Most conveniently created as part of the pin set using [`Sets::new`].
 pub struct Battery {
     /// The ADC pin used to monitor the battery voltage.
-    pub adc: gpio::Gpio34,
+    pub adc: gpio::Gpio34<'static>,
 }
 
 /// Pins attached to the watch buttons.
@@ -43,13 +43,13 @@ pub struct Battery {
 /// Most conveniently created as part of the pin set using [`Sets::new`].
 pub struct Buttons {
     /// The button 1 discrete pin.
-    pub btn_1: gpio::Gpio26,
+    pub btn_1: gpio::Gpio26<'static>,
     /// The button 2 discrete pin.
-    pub btn_2: gpio::Gpio25,
+    pub btn_2: gpio::Gpio25<'static>,
     /// The button 3 discrete pin.
-    pub btn_3: gpio::Gpio35,
+    pub btn_3: gpio::Gpio35<'static>,
     /// The button 4 discrete pin.
-    pub btn_4: gpio::Gpio4,
+    pub btn_4: gpio::Gpio4<'static>,
 }
 
 /// Pins used for the I2C bus, on which is the accelerometer and RTC.
@@ -57,20 +57,21 @@ pub struct Buttons {
 /// Most conveniently created as part of the pin set using [`Sets::new`].
 pub struct I2CBus {
     /// The I2C bus serial data line pin.
-    pub sda: gpio::Gpio21,
+    pub sda: gpio::Gpio21<'static>,
     /// The I2C bus serial clock line pin.
-    pub scl: gpio::Gpio22,
+    pub scl: gpio::Gpio22<'static>,
 }
 
 /// Pins used for the accelerometer chip.
 ///
 /// Most conveniently created as part of the pin set using [`Sets::new`].
-/// Note that the [`I2CBus`] pins are used to communicate with the accelerometer chip.
+/// Note that the [`I2CBus`] pins are used to communicate with the accelerometer
+/// chip.
 pub struct Accelerometer {
     /// Accelerometer interrupt 1 pin.
-    pub int_1: gpio::Gpio14,
+    pub int_1: gpio::Gpio14<'static>,
     /// Accelerometer interrupt 2 pin.
-    pub int_2: gpio::Gpio12,
+    pub int_2: gpio::Gpio12<'static>,
 }
 
 /// Pins used for the real time clock chip.
@@ -79,7 +80,7 @@ pub struct Accelerometer {
 /// Note that the [`I2CBus`] pins are used to communicate with the RTC chip.
 pub struct Rtc {
     /// RTC interrupt pin.
-    pub int: gpio::Gpio27,
+    pub int: gpio::Gpio27<'static>,
 }
 
 /// Pins to control the vibration motor.
@@ -87,7 +88,7 @@ pub struct Rtc {
 /// Most conveniently created as part of the pin set using [`Sets::new`].
 pub struct VibrationMotor {
     /// Pin that controls the DC vibration motor power.
-    pub power: gpio::Gpio13,
+    pub power: gpio::Gpio13<'static>,
 }
 
 /// Pins unused by the Watchy board.
@@ -98,32 +99,33 @@ pub struct VibrationMotor {
 /// are not included here.
 pub struct Unused {
     /// GPIO 0 pin.
-    pub gpio0: gpio::Gpio0,
+    pub gpio0: gpio::Gpio0<'static>,
     /// GPIO 2 pin.
-    pub gpio2: gpio::Gpio2,
+    pub gpio2: gpio::Gpio2<'static>,
     /// GPIO 6 pin.
-    pub gpio6: gpio::Gpio6,
+    pub gpio6: gpio::Gpio6<'static>,
     /// GPIO 7 pin.
-    pub gpio7: gpio::Gpio7,
+    pub gpio7: gpio::Gpio7<'static>,
     /// GPIO 8 pin.
-    pub gpio8: gpio::Gpio8,
+    pub gpio8: gpio::Gpio8<'static>,
     /// GPIO 11 pin.
-    pub gpio11: gpio::Gpio11,
+    pub gpio11: gpio::Gpio11<'static>,
     /// GPIO 15 pin.
-    pub gpio15: gpio::Gpio15,
+    pub gpio15: gpio::Gpio15<'static>,
     /// GPIO 16 pin.
-    pub gpio16: gpio::Gpio16,
+    pub gpio16: gpio::Gpio16<'static>,
     /// GPIO 17 pin.
-    pub gpio17: gpio::Gpio17,
+    pub gpio17: gpio::Gpio17<'static>,
     /// GPIO 32 pin.
-    pub gpio32: gpio::Gpio32,
+    pub gpio32: gpio::Gpio32<'static>,
     /// GPIO 33 pin.
-    pub gpio33: gpio::Gpio33,
+    pub gpio33: gpio::Gpio33<'static>,
 }
 
 /// Sets of pins organized by hardware devices featured on the board.
 ///
-/// Transform the generic HAL pins into these Watchy-specific pins using [`Sets::new`].
+/// Transform the generic HAL pins into these Watchy-specific pins using
+/// [`Sets::new`].
 pub struct Sets {
     /// Pins used for the e-Ink display.
     pub display: Display,

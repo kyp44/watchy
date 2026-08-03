@@ -4,17 +4,17 @@ use crate::{hal::gpio, EspResult};
 
 /// Trait denoting GPIO pins connected to buttons.
 pub trait ButtonPin: gpio::InputPin {}
-impl ButtonPin for gpio::Gpio26 {}
-impl ButtonPin for gpio::Gpio25 {}
-impl ButtonPin for gpio::Gpio35 {}
-impl ButtonPin for gpio::Gpio4 {}
+impl ButtonPin for gpio::Gpio26<'_> {}
+impl ButtonPin for gpio::Gpio25<'_> {}
+impl ButtonPin for gpio::Gpio35<'_> {}
+impl ButtonPin for gpio::Gpio4<'_> {}
 
 /// Driver for capturing button presses.
-pub struct ButtonDriver<'d, P: ButtonPin> {
+pub struct ButtonDriver<'d> {
     /// The driver for the button pin.
-    pin_driver: gpio::PinDriver<'d, P, gpio::Input>,
+    pin_driver: gpio::PinDriver<'d, gpio::Input>,
 }
-impl<'d, P: ButtonPin> ButtonDriver<'d, P> {
+impl<'d> ButtonDriver<'d> {
     /// Creates a new button driver for a particular button.
     ///
     /// # Example
@@ -23,17 +23,19 @@ impl<'d, P: ButtonPin> ButtonDriver<'d, P> {
     /// let pin_sets = watchy::pins::Sets::new(peripherals.pins);
     /// let button_driver = watchy::button::ButtonDriver::new(pin_sets.buttons.btn_1).unwrap();
     /// ```
-    pub fn new(pin: P) -> EspResult<Self> {
-        // NOTE: Pins should default to floating pull-up, since the Watchy provides external
-        // pulldown resistors. This cannot even be set for GPIO 35.
+    pub fn new<P: ButtonPin + 'd>(pin: P) -> EspResult<Self> {
+        // NOTE: Button pins should default to floating pull-up, since the Watchy
+        // provides external pulldown resistors. This cannot even be set for
+        // GPIO 35.
 
+        // The button pins are pulled up externally so can be left floating.
         Ok(Self {
-            pin_driver: gpio::PinDriver::input(pin)?,
+            pin_driver: gpio::PinDriver::input(pin, gpio::Pull::Floating)?,
         })
     }
 
     /// Converts this into a regular [`PinDriver`](gpio::PinDriver).
-    pub fn into_pin_driver(self) -> gpio::PinDriver<'d, P, gpio::Input> {
+    pub fn into_pin_driver(self) -> gpio::PinDriver<'d, gpio::Input> {
         self.pin_driver
     }
 
