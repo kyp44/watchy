@@ -29,7 +29,7 @@ bma423 = "0.0.4"
 embedded-hal = "1.0.0"
 embedded-hal-async = {version = "1.0.0", optional = true}
 enumset = "1.1.14"
-esp-idf-hal = {version = "0.46.2", default-features = false, features = ["timer-legacy"]}
+esp-idf-hal = {version = "0.46.2", default-features = false}
 esp-idf-svc = {version = "0.52.1", default-features = false}
 gdeh0154d67 = {version = "0.3.0", default-features = false}
 log = {version = "0.4.34", default-features = false}
