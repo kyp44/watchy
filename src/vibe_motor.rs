@@ -5,6 +5,7 @@ use crate::{pins, EspResult};
 use embedded_hal::delay;
 #[cfg(feature = "async")]
 use embedded_hal_async::delay;
+use esp_idf_hal::timer::TimerDriver;
 
 pub struct VibeMotor<'d, DLY> {
     pin_driver: gpio::PinDriver<'d, gpio::Output>,
@@ -16,6 +17,11 @@ impl<DLY: delay::DelayNs> VibeMotor<'_, DLY> {
             pin_driver: gpio::PinDriver::output(pin.power)?,
             delay,
         })
+    }
+
+    /// Provides access to the pulse delay driver.
+    pub fn delay(&mut self) -> &mut DLY {
+        &mut self.delay
     }
 
     #[cfg(not(feature = "async"))]

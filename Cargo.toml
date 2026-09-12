@@ -33,5 +33,6 @@ esp-idf-hal = {version = "0.46.2", default-features = false}
 esp-idf-svc = {version = "0.52.1", default-features = false}
 gdeh0154d67 = {version = "0.3.0", default-features = false}
 log = {version = "0.4.34", default-features = false}
+pcf8563 = "0.2.1"
 rounded-div = "0.1.4"
 thiserror = "2.0.20"
