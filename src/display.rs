@@ -9,9 +9,9 @@ use crate::hal::{gpio, spi, units::FromValueType};
 use crate::pins;
 use crate::sys::EspError;
 
-#[cfg(not(feature = "async-display"))]
+#[cfg(not(feature = "async"))]
 use embedded_hal::delay;
-#[cfg(feature = "async-display")]
+#[cfg(feature = "async")]
 use embedded_hal_async::delay;
 use gdeh0154d67::{NotInitialized, GDEH0154D67};
 use thiserror::Error;

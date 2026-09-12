@@ -14,7 +14,7 @@ version = "0.1.0"
 
 [features]
 alloc = ["esp-idf-svc/alloc", "gdeh0154d67/heap_buffer"]
-async-display = ["dep:embedded-hal-async", "gdeh0154d67/async"]
+async = ["dep:embedded-hal-async", "gdeh0154d67/async"]
 default = ["alloc", "std"]
 embassy = [
   "esp-idf-svc/embassy-sync",

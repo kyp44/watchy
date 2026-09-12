@@ -52,6 +52,7 @@ pub mod battery;
 pub mod button;
 pub mod display;
 pub mod pins;
+pub mod vibe_motor;
 
 use enumset::EnumSet;
 use hal::{i2c, units::FromValueType};
