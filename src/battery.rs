@@ -1,8 +1,9 @@
 //! Battery status using the ADC.
 
-use crate::hal::adc::{attenuation, oneshot, ADC1, ADCCH6, ADCU1};
-use crate::{pins, EspResult};
-
+use crate::{
+    hal::adc::{attenuation, oneshot, ADC1, ADCCH6, ADCU1},
+    pins, EspResult,
+};
 use rounded_div::RoundedDiv;
 
 /// Represents a battery status.

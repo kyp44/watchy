@@ -1,13 +1,12 @@
 //! Items to setup the driver for the BMA423 accelerometer chip.
 
-// Re-export core driver crate
-pub use bma423;
-
 use crate::{hal::delay, sys::EspError};
+use bma423::{Bma423, ChipId, Config, Error, FullPower};
 use embedded_hal::i2c;
 use thiserror::Error;
 
-use bma423::{Bma423, ChipId, Config, Error, FullPower};
+// Re-export core driver crate
+pub use bma423;
 
 /// Error for display setup problems.
 #[derive(Error, Debug)]

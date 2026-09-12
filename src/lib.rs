@@ -51,6 +51,7 @@ pub mod accelerometer;
 pub mod battery;
 pub mod button;
 pub mod display;
+pub mod interrupt;
 pub mod pins;
 pub mod rtc;
 pub mod vibe_motor;
@@ -71,16 +72,6 @@ pub fn initialize() {
 
     // Bind the log crate to the ESP Logging facilities
     svc::log::init_from_env();
-}
-
-#[derive(new)]
-pub struct InterruptPin<'d> {
-    driver: gpio::PinDriver<'d, gpio::Input>,
-}
-impl InterruptPin<'_> {
-    pub async fn wait_for_interrupt(&mut self) -> EspResult<()> {
-        self.driver.wait_for_falling_edge().await
-    }
 }
 
 /// Sets up the I2C driver for use with the accelerometer and/or RTC.

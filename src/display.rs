@@ -2,12 +2,14 @@
 //!
 //! TODO: Add ability to invert the display and change at runtime.
 
+use crate::{
+    hal::{gpio, spi, units::FromValueType},
+    pins,
+    sys::EspError,
+};
+
 // Re-export core display driver crate.
 pub use gdeh0154d67;
-
-use crate::hal::{gpio, spi, units::FromValueType};
-use crate::pins;
-use crate::sys::EspError;
 
 #[cfg(not(feature = "async"))]
 use embedded_hal::delay;
@@ -56,10 +58,7 @@ pub fn display_driver<'d, SPI: spi::SpiAnyPins + 'd, DLY: delay::DelayNs>(
     display_pins: pins::Display,
     spi: SPI,
     delay: DLY,
-) -> Result<DisplayDriver<'d, DLY, NotInitialized>, DisplayError>
-where
-    DLY: delay::DelayNs,
-{
+) -> Result<DisplayDriver<'d, DLY, NotInitialized>, DisplayError> {
     let spi = spi::SpiDeviceDriver::new_single(
         spi,
         display_pins.spi_sclk,

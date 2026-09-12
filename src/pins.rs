@@ -80,7 +80,7 @@ pub struct Accelerometer {
 /// Note that the [`I2CBus`] pins are used to communicate with the RTC chip.
 pub struct Rtc {
     /// RTC interrupt pin.
-    pub int: gpio::Gpio27<'static>,
+    pub interrupt: gpio::Gpio27<'static>,
 }
 
 /// Pins to control the vibration motor.
@@ -178,7 +178,9 @@ impl Sets {
                 sda: pins.gpio21,
                 scl: pins.gpio22,
             },
-            rtc: Rtc { int: pins.gpio27 },
+            rtc: Rtc {
+                interrupt: pins.gpio27,
+            },
             vibration_motor: VibrationMotor { power: pins.gpio13 },
             unused: Unused {
                 gpio0: pins.gpio0,
